@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>For My Love 💖</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #fff0f5;
+      color: #333;
+      overflow-x: hidden;
+      position: relative;
+      min-height: 100vh;
+    }
+
+    /* Floating background collage */
+    .background-flow {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      z-index: -1;
+    }
+
+    .background-flow img {
+      position: absolute;
+      width: 200px;
+      border-radius: 20px;
+      opacity: 0.2;
+      animation: floatImages 30s linear infinite;
+    }
+
+    .background-flow img:nth-child(1) { animation-duration: 25s; left: 5%; }
+    .background-flow img:nth-child(2) { animation-duration: 35s; left: 25%; }
+    .background-flow img:nth-child(3) { animation-duration: 28s; left: 50%; }
+    .background-flow img:nth-child(4) { animation-duration: 32s; left: 75%; }
+
+    @keyframes floatImages {
+      0% { transform: translateY(100vh) rotate(0deg); opacity: 0.3; }
+      50% { opacity: 0.5; }
+      100% { transform: translateY(-120vh) rotate(360deg); opacity: 0; }
+    }
+
+    header {
+      text-align: center;
+      padding: 2rem 1rem;
+      background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+      color: white;
+    }
+
+    header h1 {
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    #countdown {
+      font-size: 1.2rem;
+      margin-top: 0.5rem;
+    }
+
+    .letter {
+      max-width: 700px;
+      margin: 3rem auto;
+      padding: 2rem;
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 15px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      line-height: 1.6;
+      font-family: 'Dancing Script', cursive;
+    }
+
+    .letter h2 {
+      text-align: center;
+      margin-bottom: 1rem;
+      color: #d6336c;
+    }
+
+    .button-container {
+      text-align: center;
+      margin: 2rem auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    button {
+      background: #ff6b81;
+      color: white;
+      border: none;
+      padding: 0.8rem 1.5rem;
+      border-radius: 25px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background 0.3s, transform 0.3s;
+      animation: pulse 2s infinite;
+    }
+
+    button:hover {
+      background: #ff4757;
+      transform: scale(1.05);
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.03); }
+    }
+
+    .heart-counter {
+      margin-top: 1rem;
+      font-size: 1.2rem;
+      color: #d6336c;
+      cursor: pointer;
+    }
+
+    footer {
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.9rem;
+      color: #aaa;
+    }
+
+    /* ✅ Fixed Overlay (Centered + Scrollable) */
+    .overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.85);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+      animation: fadeIn 0.8s ease-in;
+      overflow-y: auto;
+      padding: 2rem;
+    }
+
+    .surprise-box {
+      background: white;
+      border-radius: 20px;
+      padding: 2rem;
+      text-align: center;
+      box-shadow: 0 0 30px rgba(255, 105, 180, 0.5);
+      animation: pop 0.8s ease-in-out;
+      max-width: 500px;
+      width: 90%;
+    }
+
+    .surprise-box h2 {
+      color: #d6336c;
+      margin-bottom: 1rem;
+    }
+
+    .slideshow img {
+      width: 100%;
+      max-width: 300px;
+      border-radius: 15px;
+      box-shadow: 0 4px 15px rgba(255, 105, 180, 0.3);
+      display: none;
+    }
+
+    .slideshow img.active {
+      display: block;
+      animation: fade 1s ease-in-out;
+    }
+
+    .thumbnails {
+      display: flex;
+      justify-content: center;
+      margin-top: 1rem;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .thumbnails img {
+      width: 50px;
+      height: 50px;
+      border-radius: 10px;
+      cursor: pointer;
+      opacity: 0.7;
+      transition: opacity 0.3s;
+    }
+
+    .thumbnails img:hover, .thumbnails img.active-thumb {
+      opacity: 1;
+      border: 2px solid #ff6b81;
+    }
+
+    .music-controls {
+      margin-top: 1rem;
+    }
+
+    .music-controls button {
+      margin: 0 0.5rem;
+      padding: 0.5rem 1rem;
+      background: #ff6b81;
+      border: none;
+      border-radius: 15px;
+      color: white;
+      cursor: pointer;
+    }
+
+    .music-controls input {
+      margin-left: 1rem;
+      width: 100px;
+    }
+
+    .sweet-text {
+      font-size: 1.2rem;
+      color: #d6336c;
+      margin-top: 1rem;
+    }
+
+    .close-btn {
+      background: #ff5c8a;
+      color: white;
+      border: none;
+      padding: 0.6rem 1rem;
+      border-radius: 20px;
+      margin-top: 1.5rem;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .close-btn:hover {
+      background: #ff3b6b;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes pop {
+      0% { transform: scale(0.9); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    @keyframes fade {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @media (max-width: 768px) {
+      header h1 { font-size: 2rem; }
+      .letter { padding: 1rem; }
+      .surprise-box { padding: 1rem; }
+      .thumbnails img { width: 40px; height: 40px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Background -->
+  <div class="background-flow">
+    <img src="1.jpg" alt="">
+    <img src="2.jpg" alt="">
+    <img src="3.jpg" alt="">
+    <img src="4.jpg" alt="">
+  </div>
+
+  <header>
+    <h1>❤️ My Love Collage ❤️</h1>
+    <p>For the one who makes my heart smile</p>
+    <div id="countdown">Countdown to our special day: Loading...</div>
+  </header>
+
+  <section class="letter">
+    <h2>💌 A Letter for You</h2>
+    <p>
+      My dearest love,<br><br>
+      Every day I spend with you is a blessing. Your smile lights up my world and your laughter is music to my soul. 
+      From our first moment together, I knew something magical was happening.<br><br>
+      You bring out the best in me and make even ordinary days feel extraordinary. 
+      I am endlessly grateful for your love, your kindness, and the joy you bring into my life.<br><br>
+      This little collage is just a glimpse of the beautiful memories we've made — 
+      and the countless more waiting ahead of us.<br><br>
+      With all my heart, always.<br>❤️ [Your Name]
+    </p>
+  </section>
+
+  <div class="button-container">
+    <button onclick="showSurprise()">Click for something special 💖</button>
+    <div class="heart-counter" onclick="incrementHearts()">💖 Hearts Sent: <span id="heartCount">0</span></div>
+
+    <!-- Overlay -->
+    <div class="overlay" id="overlay">
+      <div class="surprise-box">
+        <h2>💞 You Are My Forever 💞</h2>
+        <div class="slideshow">
+          <img src="1.jpg" class="slide active">
+          <img src="2.jpg" class="slide">
+          <img src="3.jpg" class="slide">
+          <img src="4.jpg" class="slide">
+        </div>
+
+        <div class="thumbnails">
+          <img src="1.jpg" onclick="showSlide(0)" class="active-thumb">
+          <img src="2.jpg" onclick="showSlide(1)">
+          <img src="3.jpg" onclick="showSlide(2)">
+          <img src="4.jpg" onclick="showSlide(3)">
+        </div>
+
+        <div class="music-controls">
+          <button onclick="playPauseSong()">Play/Pause</button>
+          <input type="range" min="0" max="1" step="0.1" value="0.5" onchange="setVolume(this.value)">
+        </div>
+
+        <p class="sweet-text">Every picture is a heartbeat of our story. 💕</p>
+        <p class="sweet-text">
+          Every photo we’ve taken tells a story — a moment we laughed, loved, or simply existed together. 
+          Each one is a piece of our journey, stitched together by smiles, warmth, and countless memories. 
+          No matter how much time passes, these snapshots will always remind me how beautiful it feels to be with you. ❤️
+        </p>
+
+        <button class="close-btn" onclick="closeSurprise()">Close 💫</button>
+        <audio id="loveSong" src="song.mp3" preload="auto"></audio>
+      </div>
+    </div>
+  </div>
+
+  <footer>Made with love 💕</footer>
+
+  <script>
+    let slideInterval;
+    let currentSlide = 0;
+    let heartCount = 0;
+    const slides = document.querySelectorAll('.slide');
+    const thumbnails = document.querySelectorAll('.thumbnails img');
+    const song = document.getElementById('loveSong');
+
+    // Countdown
+    const specialDate = new Date(2024, 11, 25, 0, 0, 0);
+    function updateCountdown() {
+      const now = new Date();
+      const diff = specialDate - now;
+      if (diff > 0) {
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+        document.getElementById('countdown').innerText = 
+          `Countdown to our special day: ${days}d ${hours}h ${minutes}m ${seconds}s`;
+      } else {
+        document.getElementById('countdown').innerText = 'Our special day is here! 🎉';
+      }
+    }
+    setInterval(updateCountdown, 1000);
+    updateCountdown();
+
+    function incrementHearts() {
+      heartCount++;
+      document.getElementById('heartCount').innerText = heartCount;
+    }
+
+    function showSurprise() {
+      const overlay = document.getElementById('overlay');
+      overlay.style.display = 'flex';
+      confetti({
+        particleCount: 100,
+        spread: 70,
+        origin: { y: 0.6 },
+        shapes: ['heart'],
+        colors: ['#ff6b81', '#fad0c4', '#d6336c']
+      });
+      song.play();
+      startSlideshow();
+    }
+
+    function startSlideshow() {
+      clearInterval(slideInterval);
+      slideInterval = setInterval(() => {
+        showSlide((currentSlide + 1) % slides.length);
+      }, 3000);
+    }
+
+    function showSlide(index) {
+      slides[currentSlide].classList.remove('active');
+      thumbnails[currentSlide].classList.remove('active-thumb');
+      currentSlide = index;
+      slides[currentSlide].classList.add('active');
+      thumbnails[currentSlide].classList.add('active-thumb');
+    }
+
+    function playPauseSong() {
+      if (song.paused) song.play();
+      else song.pause();
+    }
+
+    function setVolume(value) {
+      song.volume = value;
+    }
+
+    function closeSurprise() {
+      const overlay = document.getElementById('overlay');
+      overlay.style.display = 'none';
+      song.pause();
+      song.currentTime = 0;
+      clearInterval(slideInterval);
+    }
+  </script>
+</body>
+</html>
